@@ -49,6 +49,24 @@ const memory = (function() {
             displayStars();
         }
     };
+	
+	/* 
+     * variables for game state
+     * ---------------------
+     * firstCard: Node of the first card revealed that has been revealed in a turn
+     * freezeGame: Flag to freeze the game - if true, no other elements can be clicked, this is to avoid cards being revealed while the turning cards animation is still in process
+     * moves: status block for keeping the number of moves
+     * startTime: needed for the function runTimer()
+     * timerInterval: it is required for stopTimer();
+     * totalTime: keeping track of the time
+     */
+    let firstCard,
+    freezeGame = false,
+    moves = 0,
+    stars = 3,
+    startTime = 0,
+    timerInterval,
+    totalTime = 0;
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -65,14 +83,23 @@ function shuffle(array) {
     return array;
 }
 
-
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
+/**
+     * @function formatTime
+     * @description Converts milliseconds to an object separated as minutes and seconds (if seconds < 10, then it has a preceding 0)
+     * @param {number} ms - Time to convert to an object
+     * @returns {Object} with two properties (minutes, seconds)
+     */
+    const formatTime = function(ms) {
+        // Convert ms to s
+        const unformattedSeconds = Math.floor(ms / 1000);
+        // If applies, extract amount of minutes
+        const minutes = unformattedSeconds >= 60 ? Math.floor(unformattedSeconds / 60) : 0;
+        // Removing the minutes and get the rest of the time as seconds
+        const seconds = minutes > 0 ? unformattedSeconds - (minutes * 60) : unformattedSeconds;
+        
+        return {
+            minutes,
+            seconds: seconds < 10 ? '0' + seconds : seconds
+        };
+    };
+	
