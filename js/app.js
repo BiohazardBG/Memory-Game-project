@@ -112,3 +112,38 @@ function shuffle(array) {
         }, 1000);
     };
 	
+	/* GAME STATE FUNCTIONS */
+
+    // Returning true if selectedCard matches with firstCard
+    const cardsMatch = function(selectedCard) {
+        return deckArray[firstCard.dataset.index] === deckArray[selectedCard.dataset.index];
+    };
+
+    // Releases frozen game state and start the next turn
+     
+    const finishTurn = function() {
+        firstCard = null;
+        freezeGame = false;
+    };
+
+    // Returning true when game is finished
+    const isGameWon = function() {
+        return document.querySelectorAll(DOM.card).length === document.querySelectorAll(DOM.match).length;
+    };
+
+    
+    // Stopping the timer
+    const stopTimer = function() {
+        clearInterval(timerInterval);
+    };
+
+    
+
+    /**
+     * @function updateMoves
+     * @description Increments move by 1 and updates the UI
+     */
+    const updateMoves = function() {
+        moves++;
+        displayMoveCounter();
+    };
