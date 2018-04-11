@@ -40,10 +40,10 @@ h1 {
 .deck {
     width: 660px;
     min-height: 680px;
-    background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
+    background: linear-gradient(160deg, #02ccca 0%, #aa5ecd 100%);
     padding: 32px;
-    border-radius: 10px;
-    box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
+    border-radius: 15px;
+    box-shadow: 17px 19px 25px 0 rgba(42, 63, 75, 0.4);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -63,22 +63,24 @@ h1 {
     justify-content: center;
     align-items: center;
     box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+    transition: 0.5s;
 }
 
 .deck .card.open {
-    transform: rotateY(0);
+    transform: rotateY(720deg);
     background: #02b3e4;
-    cursor: default;
-}
-
-.deck .card.show {
+    cursor: grab;
     font-size: 33px;
 }
 
 .deck .card.match {
-    cursor: default;
+    cursor: grab;
     background: #02ccba;
     font-size: 33px;
+}
+
+.deck .card.mismatch {
+    background: #A50101;
 }
 
 /*
@@ -103,7 +105,113 @@ h1 {
     display: inline-block;
 }
 
+.score-panel .timer {
+    display: inline-block;
+    position: absolute;
+    left: 50%;
+}
+
 .score-panel .restart {
     float: right;
     cursor: pointer;
+}
+
+/*
+ * Styles for main
+ */
+
+.main {
+    position: fixed;
+}
+
+.main-container {
+    display: none;
+}
+
+.main .main-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    display: block;
+    transition: all .3s;
+}
+
+.main-box {
+    border-radius: 10px;
+    position: absolute;
+    width: 80%;
+    left: 50%;
+    padding: 10px;
+    transform: translateX(-50%);
+    top: 25%;
+    background-color: #fff;
+}
+
+.main-start,
+.main-finished {
+    display: none;
+}
+
+.main.start .main-start,
+.main.finished .main-finished {
+    display: block;
+}
+
+.btn {
+    background-color: blue;
+    border: 3px green solid;
+    border-radius: 2px;
+    color: white;
+    display: block;
+    font-size: 20px;
+    font-family: 'Coda', cursive;
+    height: 40px;
+    margin: 0 auto;
+    outline: none;
+    width: 200px;
+}
+
+.btn:hover {
+    background-color: green;
+}
+
+/*
+ * responsive elements
+ */
+
+/* small displays */
+@media screen and (max-width: 600px) {
+    body {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .deck {
+        margin: 0 2px;
+        min-height: auto;
+        padding: 0;
+        width: 100%;
+    }
+    
+    .deck .card {
+        flex-basis: 24%;
+        margin: 1px;
+    }
+    
+    .main-box {
+        top: 10%;
+    }
+    
+}
+
+/* bigger displays */
+@media screen and (min-height: 700px) {
+    body {
+        display: flex;
+        justify-content: center;
+    }
 }

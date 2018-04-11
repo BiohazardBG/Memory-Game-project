@@ -30,7 +30,7 @@ const memory = (function() {
         'fa-bomb',
         'fa-paper-plane-o'
     ];
-	
+
 	// Disable main state /deleting body/ and starting the game
     const hideMain = function(type) {
         const body = document.querySelector('body');
@@ -67,27 +67,26 @@ const memory = (function() {
     startTime = 0,
     timerInterval,
     totalTime = 0;
-
-// Shuffle function from http://stackoverflow.com/a/2450976
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-}
-
-/**
+	
+	//Shuffle function
+	
+    const shuffleCards = function(cards, times) {
+        for(let i = 0; i < times; i++) {
+            let currentIndex = cards.length, temporaryValue, randomIndex;
+                while (currentIndex !== 0) {
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex -= 1;
+                    temporaryValue = cards[currentIndex];
+                    cards[currentIndex] = cards[randomIndex];
+                    cards[randomIndex] = temporaryValue;
+                }
+        }
+        return cards;
+    };
+	
+	/**
      * @function formatTime
      * @description Converts milliseconds to an object separated as minutes and seconds (if seconds < 10, then it has a preceding 0)
-     * @param {number} ms - Time to convert to an object
-     * @returns {Object} with two properties (minutes, seconds)
      */
     const formatTime = function(ms) {
         // Convert ms to s
@@ -103,7 +102,7 @@ function shuffle(array) {
         };
     };
 	
-// Function for showing the time in the block
+	// Function for showing the time in the block
     const runTimer = function() {
         startTime = Date.now(); 
         timerInterval = setInterval(function() {
@@ -111,8 +110,9 @@ function shuffle(array) {
             displayTimer(totalTime);
         }, 1000);
     };
-	
-	/* GAME STATE FUNCTIONS */
+
+    
+    /* GAME STATE FUNCTIONS */
 
     // Returning true if selectedCard matches with firstCard
     const cardsMatch = function(selectedCard) {
@@ -137,7 +137,9 @@ function shuffle(array) {
         clearInterval(timerInterval);
     };
 
-     /**
+    
+
+    /**
      * @function updateMoves
      * @description Increments move by 1 and updates the UI
      */
@@ -145,10 +147,14 @@ function shuffle(array) {
         moves++;
         displayMoveCounter();
     };
-	
-	/* User interface */
 
-    // game won function
+
+    /* User interface */
+
+    /**
+     * @function gameWon
+     * @description Stops the timer and displays results main when game is won
+     */
     const gameWon = function() {
         stopTimer();
         displayMain('finished');
@@ -165,7 +171,10 @@ function shuffle(array) {
 
     
 
-    // function for prepearing the main element if event is finished
+    /**
+     * @function displayMain
+     * @description Controls the main container and prepares the body to display main windows
+     */
     const displayMain = function(type) {
         const body = document.querySelector('body');
         body.classList.add('main');
@@ -176,7 +185,10 @@ function shuffle(array) {
         }
     };
 
-    // Function for showing the result after won
+    /**
+     * @function displayResults
+     * @description Renders the result main window on the screen when game is won
+     */
     const displayResults = function() {
         const formattedTime = formatTime(totalTime);
         const minutes = formattedTime.minutes;
@@ -190,18 +202,27 @@ function shuffle(array) {
         document.querySelector(DOM.resultTime).textContent = timeString;
     };
 
-    // Showing the time in format 00.00 mm.ss
+    /**
+     * @function displayTimer
+     * @description Renders the time on UI in format 00:00 (MM:SS)
+     */
     const displayTimer = function(ms) {
         const formattedTime = formatTime(ms);
         document.querySelector(DOM.timer).textContent = `${formattedTime.minutes}:${formattedTime.seconds}`;
     };
 
-    // Function for reseting the timer
+    /**
+     * @function resetTimer
+     * @description Resets the timer display to 00:00
+     */
     const resetTimer = function() {
         displayTimer(0);
     };
 
-    //function for rendering the stars in UI
+    /**
+     * @function displayStars
+     * @description Renders stars on the user interface
+     */
     const displayStars = function() {
         let html = '';
         for(let i = 0; i < 3; i++) {
@@ -219,19 +240,26 @@ function shuffle(array) {
         document.querySelector(DOM.stars).innerHTML = html;
     };
 
-    // Function for counting moves 
+    /**
+     * @function displayMoveCounter
+     * @description Displays number of moves
+     */
     const displayMoveCounter = function() {
         document.querySelector(DOM.moves).textContent = moves;
     };
 
-    
-     // Takes Font-Awesome icon code and create a <li> with the attribute data-index={index}
-     
+    /**
+     * @function createListItem
+     * @description Takes Font-Awesome icon code and create a <li> with the attribute data-index={index}
+     */
     const createListItem = function(icon, index) {
         return `<li class="card" data-index="${index}"><i class="fa ${icon}"></i></li>`;
     };
 
-    // Dysplays the cards on the deck
+    /**
+     * @function generateDeck
+     * @description Displays cards on the deck
+     */
     const generateDeck = function() {
         let html = deckArray.map(function(icon, index) {
             return createListItem(icon, index);
@@ -240,14 +268,18 @@ function shuffle(array) {
         document.querySelector(DOM.deck).innerHTML = html;
     };
 
-    // Operational function for loading UI
+    /**
+     * @function render
+     * @description Central function to load UI components
+     */
     const render = function() {
         generateDeck();
         displayMoveCounter();
         displayStars();
     };
-	
-	/* GAMING CONTROL */
+
+
+    /* GAMING CONTROL */
 
     // Controls the behavior of the game when cards are being uncovered
    
