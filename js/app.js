@@ -247,3 +247,85 @@ function shuffle(array) {
         displayStars();
     };
 	
+	/* GAMING CONTROL */
+
+    // Controls the behavior of the game when cards are being uncovered
+   
+    const showCards = function(evt) {
+        if(evt.target.tagName !== 'LI' || evt.target.classList.contains('open') || freezeGame) return;
+        
+        const selectedCard = evt.target;
+        selectedCard.classList.add('open');
+
+        // Updating moves based on increment
+        updateMoves();
+        updateStars();
+
+        // Check if it is the second shown card in this turn
+        if(firstCard) {
+            // Check if cards match
+            freezeGame = true;
+            if(cardsMatch(selectedCard)) {
+                setTimeout(function() {
+                    toggleCardsStyle(firstCard, selectedCard, 'match');
+                    finishTurn();
+                    
+                    // check for game won
+                    if(isGameWon()) {
+                        gameWon();
+                    }
+                }, 200);
+            } else {
+                setTimeout(function() {
+                    toggleCardsStyle(firstCard, selectedCard, 'mismatch');
+                    
+                    // Hide cards after mismatch
+                    setTimeout(function() {
+                        toggleCardsStyle(firstCard, selectedCard, 'open');
+                        toggleCardsStyle(firstCard, selectedCard, 'mismatch');
+                        finishTurn();
+                    }, 500);
+                }, 200)
+            }
+        } else {
+            firstCard = selectedCard;
+        }
+    };
+
+    // Registers event handlers on the game interface
+    const setEventHandler = function() {
+        document.querySelector(DOM.deck).addEventListener('click', showCards);
+        document.querySelector(DOM.restartBtn).addEventListener('click', startGame);
+        document.querySelector(DOM.btnStart).addEventListener('click', function() {
+            hideMain('start');
+        });
+        document.querySelector(DOM.btnRestart).addEventListener('click', function() {
+            hideMain('finished');
+        });
+    };
+
+    // Reset the game and start a new one
+    const startGame = function() {
+        moves = 0;
+        stars = 3;
+        totalTime = 0;
+        deckArray.splice(0, deckArray.length);
+        deckArray.push(...shuffleCards([...cards, ...cards], 3));
+        resetTimer();
+        runTimer();
+        render();
+    };
+
+    // Start the game and shuffles the cards
+    const init = function() {
+        deckArray.push(...shuffleCards([...cards, ...cards], 3));
+        render();
+        setEventHandler();
+    };
+
+    return {
+        init,
+    };
+})();
+
+memory.init();
