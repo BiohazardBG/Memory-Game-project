@@ -1,14 +1,35 @@
-/*
- * Create a list that holds all of your cards
- */
+const memory = (function() {
+    // Positioning cards on the game board
+    const deckArray = [],
 
+    // Created string for DOM access
+    DOM = {
+        scorePanel: '.score-panel',
+        stars: '.stars',
+        moves: '.moves',
+        restartBtn: '.restart',
+        deck: '.deck',
+        card: '.card',
+        match: '.match',
+        timer: '.timer',
+        btnStart: '.btn-start',
+        btnRestart: '.btn-restart',
+        resultMoves: '.result-moves',
+        resultStars: '.result-stars',
+        resultTime: '.result-time',
+    },
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
+    // symbols for the cards in array
+    cards = [
+        'fa-diamond',
+        'fa-anchor',
+        'fa-bolt',
+        'fa-leaf',
+        'fa-cube',
+        'fa-bicycle',
+        'fa-bomb',
+        'fa-paper-plane-o'
+    ];
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
