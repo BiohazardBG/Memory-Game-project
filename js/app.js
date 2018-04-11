@@ -137,9 +137,7 @@ function shuffle(array) {
         clearInterval(timerInterval);
     };
 
-    
-
-    /**
+     /**
      * @function updateMoves
      * @description Increments move by 1 and updates the UI
      */
@@ -147,3 +145,105 @@ function shuffle(array) {
         moves++;
         displayMoveCounter();
     };
+	
+	/* User interface */
+
+    // game won function
+    const gameWon = function() {
+        stopTimer();
+        displayMain('finished');
+    };
+
+    /**
+     * @function toggleCardStyle
+     * @description Toggles a class to two provided DOM Nodes
+     */
+    const toggleCardsStyle = function(cardOne, cardTwo, className) {
+        cardOne.classList.toggle(className);
+        cardTwo.classList.toggle(className);
+    };
+
+    
+
+    // function for prepearing the main element if event is finished
+    const displayMain = function(type) {
+        const body = document.querySelector('body');
+        body.classList.add('main');
+        body.classList.add(type);
+        
+        if(type === 'finished') {
+            displayResults();
+        }
+    };
+
+    // Function for showing the result after won
+    const displayResults = function() {
+        const formattedTime = formatTime(totalTime);
+        const minutes = formattedTime.minutes;
+        const seconds = formattedTime.seconds;
+
+        let timeString = minutes > 0 ? (minutes > 1 ? minutes + ' minutes ' : minutes + ' minute ') : '';
+        timeString += seconds + ' seconds';
+
+        document.querySelector(DOM.resultMoves).textContent = moves;
+        document.querySelector(DOM.resultStars).textContent = stars;
+        document.querySelector(DOM.resultTime).textContent = timeString;
+    };
+
+    // Showing the time in format 00.00 mm.ss
+    const displayTimer = function(ms) {
+        const formattedTime = formatTime(ms);
+        document.querySelector(DOM.timer).textContent = `${formattedTime.minutes}:${formattedTime.seconds}`;
+    };
+
+    // Function for reseting the timer
+    const resetTimer = function() {
+        displayTimer(0);
+    };
+
+    //function for rendering the stars in UI
+    const displayStars = function() {
+        let html = '';
+        for(let i = 0; i < 3; i++) {
+            if(stars > i) {
+                if(stars === i + 0.5) {
+                    html += '<i class="fa fa-star-half-o"></i>';
+                } else {
+                    html += '<i class="fa fa-star"></i>';
+                }
+            } else {
+                html += '<i class="fa fa-star-o"></i>';
+            }
+        }
+
+        document.querySelector(DOM.stars).innerHTML = html;
+    };
+
+    // Function for counting moves 
+    const displayMoveCounter = function() {
+        document.querySelector(DOM.moves).textContent = moves;
+    };
+
+    
+     // Takes Font-Awesome icon code and create a <li> with the attribute data-index={index}
+     
+    const createListItem = function(icon, index) {
+        return `<li class="card" data-index="${index}"><i class="fa ${icon}"></i></li>`;
+    };
+
+    // Dysplays the cards on the deck
+    const generateDeck = function() {
+        let html = deckArray.map(function(icon, index) {
+            return createListItem(icon, index);
+        }).join('');
+
+        document.querySelector(DOM.deck).innerHTML = html;
+    };
+
+    // Operational function for loading UI
+    const render = function() {
+        generateDeck();
+        displayMoveCounter();
+        displayStars();
+    };
+	
