@@ -103,3 +103,12 @@ function shuffle(array) {
         };
     };
 	
+// Function for showing the time in the block
+    const runTimer = function() {
+        startTime = Date.now(); 
+        timerInterval = setInterval(function() {
+            totalTime = Date.now() - startTime;
+            displayTimer(totalTime);
+        }, 1000);
+    };
+	
